@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Three JS Example</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="./js/modernizr-2.8.3.min.js"></script>
+    <style>
+      .main_body {
+        margin: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body class="main_body">
+    <div id="webgl"></div>
+    <script src="./js/three.min.js"></script>
+    <script src="./js/detector.js"></script>
+    <script src="./js/orbitControls.js"></script>
+
+    <script type="x-shader/x-vertex" id="vertexshader">
+      attribute float size;
+      attribute vec3 customColor;
+
+      varying vec3 vColor;
+
+      void main() {
+          vColor = customColor;
+          vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+          gl_PointSize = size * ( 300.0 / length( mvPosition.xyz ) );
+          gl_Position = projectionMatrix * mvPosition;
+      }
+    </script>
+    <script type="x-shader/x-fragment" id="fragmentshader">
+      uniform vec3 color;
+      uniform sampler2D texture;
+
+      varying vec3 vColor;
+
+      void main() {
+          gl_FragColor = vec4( color * vColor, 0.5 );
+          gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
+      }
+    </script>
+
+    <script src="./js/points.js"></script>
+    <script src="./js/earth.js"></script>
+  </body>
+</html>
